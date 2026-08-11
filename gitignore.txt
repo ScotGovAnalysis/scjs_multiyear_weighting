@@ -1,0 +1,31 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Re-include files containing "config"
+!*config*
+ 
+# Except config_example
+config_example
+
+# 'data' folder #
+data/
+output/
+
+# Common text files that may contain data #
+*.[cC][sS][vV]
+*.[tT][xX][tT]
+
+# Excel files #
+*.[xX][lL][sS]*
+
+# SPSS formats #
+*.[sS][aA][vV]
+
+# SAS format #
+*.[sS][aA][sS]7[bB][dD][aA][tT]
+
+# R data files #
+*.[rR][dD][aA][tT][aA]
+*.[rR][dD][sS]
