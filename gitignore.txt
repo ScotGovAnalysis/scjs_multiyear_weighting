@@ -4,10 +4,10 @@
 .Ruserdata
 
 # Re-include files containing "config"
-!*config*
+*config*
  
 # Except config_example
-config_example
+!config_example
 
 # 'data' folder #
 data/
