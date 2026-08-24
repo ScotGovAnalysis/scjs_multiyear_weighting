@@ -140,7 +140,8 @@ pre_calib_check <- pre_calib$sum
 if (all.equal(pre_calib_check, config$hh_total) == TRUE) {
   print("Sum of preweight matches total household population of Scotland, continuing...")
 } else {
-  stop(paste("Sum of preweight is", pre_calib_check, "doesn't match. Halting execution."))
+  stop(paste("Sum of preweight is", pre_calib_check, " and doesn't match pop total (", config$hh_total, 
+             "). Halting execution. Check if latest SCJS single-year weights used correct hh totals."))
 }
 
 # Calibration -------------------------
