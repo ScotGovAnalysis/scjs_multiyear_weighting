@@ -80,6 +80,14 @@ totals <- read_csv(config$hh_sc_totals_file,
          total = 2) %>%
   select(name, total)
 
+# check if calibration totals align with hh total (their sum should be a total of the hh total)
+# if the check is failed, check if the hh totals value is correct
+if((sum(totals$total) %% config$hh_total == 0) == TRUE){
+  print('Sum of calibration totals is multiple of hh total, continuing...')
+} else {
+  stop(paste0('Sum of calibration totals (', sum(totals$total), 
+              ') is NOT multiple of hh total (', config$hh_total, '). Investigate.'))
+}
 
 # Create dataset -------------------------
 
@@ -138,7 +146,8 @@ pre_calib_check <- pre_calib$sum
 if (all.equal(pre_calib_check, config$hh_total) == TRUE) {
   print("Sum of preweight matches total household population of Scotland, continuing...")
 } else {
-  stop(paste0("Sum of preweight is ", pre_calib_check, " and doesn't match pop total (", config$hh_total, "). Halting execution."))
+  stop(paste0("Sum of preweight is ", pre_calib_check, " and doesn't match pop total (", config$hh_total, 
+              "). Halting execution. Check if latest SCJS single-year weights used correct hh totals."))
 }
 
 # Calibration -------------------------

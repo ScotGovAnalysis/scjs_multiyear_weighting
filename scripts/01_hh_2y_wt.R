@@ -74,6 +74,14 @@ totals <- read_csv(config$hh_totals_file,
          total = 2) %>%
   select(name, total)
 
+# check if calibration totals align with hh total (their sum should be a total of the hh total)
+# if the check is failed, check if the hh totals value is correct
+if((sum(totals$total) %% config$hh_total == 0) == TRUE){
+  print('Sum of calibration totals is multiple of hh total, continuing...')
+} else {
+  stop(paste0('Sum of calibration totals (', sum(totals$total), 
+              ') is NOT multiple of hh total (', config$hh_total, '). Investigate.'))
+}
 
 # Create dataset -------------------------
 

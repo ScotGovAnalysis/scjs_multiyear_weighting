@@ -77,6 +77,15 @@ totals <- read_csv(config$ind_totals_file,
          total = 2) %>%
   select(name, total)
 
+# check if calibration totals align with ind total (their sum should be a total of the ind total)
+# if the check is failed, check if the ind totals value is correct
+if((sum(totals$total) %% config$ind_total == 0) == TRUE){
+  print('Sum of calibration totals is multiple of ind total, continuing...')
+} else {
+  stop(paste0('Sum of calibration totals (', sum(totals$total), 
+              ') is NOT multiple of ind total (', config$ind_total, '). Investigate.'))
+}
+
 # Create dataset -------------------------
 
 # Add message to inform user about progress
