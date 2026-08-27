@@ -36,6 +36,7 @@
 # Dependencies:
 #   - scripts/00_setup.R
 #   - scjs_import_data()
+#   - scjs_create_calibration_totals()
 #   - scjs_create_preweight()
 #   - scjs_create_pd2()
 #   - scjs_standardise_la_names()
@@ -69,28 +70,6 @@ message("Import data")
 y1 <- scjs_import_data(setup$ind_file_y1)
 y2 <- scjs_import_data(setup$ind_file_y2)
 
-# import population totals for calibration
-totals <- read_csv(config$ind_totals_file,
-                   show_col_types = FALSE,
-                   name_repair = "unique_quiet") %>%
-  rename(name = 1,
-         total = 2) %>%
-  select(name, total)
-
-# check if calibration totals align with ind total (their sum should be a total of the ind total)
-# if the check is failed, check if the ind totals value is correct
-if((sum(totals$total) %% config$ind_total == 0) == TRUE){
-  print('Sum of calibration totals is multiple of ind total, continuing...')
-} else {
-  stop(paste0('Sum of calibration totals (', sum(totals$total), 
-              ') is NOT multiple of ind total (', config$ind_total, '). Investigate.'))
-}
-
-# Create dataset -------------------------
-
-# Add message to inform user about progress
-message("Create dataset")
-
 # combine years
 combined <- bind_rows(
   y1 %>%
@@ -103,6 +82,16 @@ combined <- bind_rows(
            !!paste0("y", config$year_2s) := 1)
 )
 
+
+# Import calibration totals -------------------------
+
+# import population totals for calibration
+
+total <- scjs_create_calibration_totals(
+  totals_file = config$ind_totals_file,
+  data = combined,
+  pop_total = config$ind_total
+)
 
 # Pre-calibration -------------------------
 

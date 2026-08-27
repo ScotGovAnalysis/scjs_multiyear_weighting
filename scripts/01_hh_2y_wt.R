@@ -33,6 +33,7 @@
 #   - scripts/00_setup.R
 #   - functions/scjs_import_data()
 #   - functions/scjs_create_preweight()
+#   - functions/scjs_create_calibration_totals()
 #   - functions/scjs_create_pd2()
 #   - functions/scjs_standardise_la_names()
 #   - functions/scjs_collapse_household_age_band()
@@ -66,27 +67,6 @@ message("Import data")
 y1 <- scjs_import_data(setup$hh_file_y1)
 y2 <- scjs_import_data(setup$hh_file_y2)
 
-# import population totals for calibration
-totals <- read_csv(config$hh_totals_file,
-                   show_col_types = FALSE,
-                   name_repair = "unique_quiet") %>%
-  rename(name = 1,
-         total = 2) %>%
-  select(name, total)
-
-# check if calibration totals align with hh total (their sum should be a total of the hh total)
-# if the check is failed, check if the hh totals value is correct
-if((sum(totals$total) %% config$hh_total == 0) == TRUE){
-  print('Sum of calibration totals is multiple of hh total, continuing...')
-} else {
-  stop(paste0('Sum of calibration totals (', sum(totals$total), 
-              ') is NOT multiple of hh total (', config$hh_total, '). Investigate.'))
-}
-
-# Create dataset -------------------------
-
-# Add message to inform user about progress
-message("Create dataset")
 
 # combine years
 combined <- bind_rows(
@@ -98,8 +78,18 @@ combined <- bind_rows(
     mutate(survey_year = config$year_2s,
            !!paste0("y", config$year_1s) := 0,
            !!paste0("y", config$year_2s) := 1)
-  )
+)
 
+
+# Import calibration totals -------------------------
+
+# import population totals for calibration
+
+total <- scjs_create_calibration_totals(
+  totals_file = config$hh_totals_file,
+  data = combined,
+  pop_total = config$hh_total
+)
 
 # Pre-calibration -------------------------
 
