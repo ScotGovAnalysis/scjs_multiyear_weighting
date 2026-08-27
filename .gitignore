@@ -7,7 +7,7 @@
 *config*
  
 # Except config_example
-!config_example
+!scripts/config_example.R
 
 # 'data' folder #
 data/
