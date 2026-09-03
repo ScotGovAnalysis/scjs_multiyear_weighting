@@ -90,7 +90,7 @@ combined <- bind_rows(
 # Import calibration totals -------------------------
 
 # import population totals for calibration
-total <- scjs_create_calibration_totals(
+totals <- scjs_create_calibration_totals(
   totals_file = config$hh_sc_totals_file,
   data = combined,
   pop_total = config$hh_total
